@@ -1,4 +1,3 @@
-````markdown
 # 📰 Artikel API with FastAPI & ClickHouse
 
 API sederhana untuk membuat, membaca, memperbarui, dan menghapus artikel menggunakan **FastAPI** dan **ClickHouse** sebagai database. Mendukung visualisasi dokumentasi via Swagger UI.
@@ -108,4 +107,3 @@ fastapi-clickhouse-crud/
 
 MIT License © 2025 [Aktifkoding](https://github.com/aktifkoding)
 
-```
