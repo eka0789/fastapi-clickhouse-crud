@@ -105,5 +105,5 @@ fastapi-clickhouse-crud/
 
 ## 📄 Lisensi
 
-MIT License © 2025 [Aktifkoding](https://github.com/aktifkoding)
+MIT License © 2025 [Eka0789](https://github.com/eka0789)
 
