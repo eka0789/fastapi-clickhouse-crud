@@ -26,7 +26,7 @@ API sederhana untuk membuat, membaca, memperbarui, dan menghapus artikel menggun
 ### 1. Clone Repo
 
 ```bash
-git clone https://github.com/username/fastapi-clickhouse-crud.git
+git clone https://github.com/eka0789/fastapi-clickhouse-crud.git
 cd fastapi-clickhouse-crud
 ````
 
