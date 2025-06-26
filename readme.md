@@ -1,16 +1,19 @@
 # 📰 Artikel API with FastAPI & ClickHouse
 
-API sederhana untuk membuat, membaca, memperbarui, dan menghapus artikel menggunakan **FastAPI** dan **ClickHouse** sebagai database. Mendukung visualisasi dokumentasi via Swagger UI.
+API lengkap untuk membuat, membaca, memperbarui, dan menghapus artikel menggunakan **FastAPI** dan **ClickHouse** sebagai database utama. API ini mendukung otentikasi JWT, dokumentasi Swagger UI, ekspor data ke CSV, pagination, serta visualisasi melalui **Grafana**.
 
 
-## 🚀 Fitur
+## 🚀 Fitur Lengkap
 
 - ✅ CRUD Artikel (`GET`, `POST`, `PUT`, `DELETE`)
-- ✅ Tabel `articles` disiapkan otomatis
-- ✅ Generate 100 data dummy saat start
-- ✅ Swagger UI tersedia
-- ✅ Terhubung ke ClickHouse
-- ✅ Struktur modular & clean
+- 🔐 Login dengan Auth JWT
+- 📄 Swagger UI otomatis
+- 🔁 Pagination & Search
+- 📦 Export data ke CSV
+- 🧪 Unit Test dengan `pytest`
+- 📊 Visualisasi data di Grafana
+- 🔧 Struktur proyek modular dan terorganisir
+- 🐳 Siap deploy dengan Docker Compose
 
 
 ## ⚙️ Tech Stack
@@ -19,24 +22,54 @@ API sederhana untuk membuat, membaca, memperbarui, dan menghapus artikel menggun
 - [ClickHouse](https://clickhouse.com/)
 - [clickhouse-connect](https://pypi.org/project/clickhouse-connect/)
 - [Faker](https://faker.readthedocs.io/en/master/) untuk dummy data
+- [Grafana](https://grafana.com/) untuk dashboard
+- [Docker](https://www.docker.com/) untuk containerisasi
+- [pytest](https://docs.pytest.org/) untuk pengujian
 
 
-## 🧑‍💻 Instalasi Lokal
+## 📁 Struktur Proyek
+
+```
+fastapi-clickhouse-crud/
+├── app/
+│   ├── main.py
+│   ├── core/
+│   │   ├── config.py
+│   │   └── security.py
+│   ├── models/
+│   │   └── article.py
+│   ├── routers/
+│   │   ├── auth.py
+│   │   └── articles.py
+│   └── services/
+│       └── clickhouse_client.py
+├── tests/
+│   └── test_articles.py
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env
+└── README.md
+```
+
+
+## 🧑‍💻 Instalasi Lokal (Non-Docker)
 
 ### 1. Clone Repo
 
 ```bash
 git clone https://github.com/eka0789/fastapi-clickhouse-crud.git
 cd fastapi-clickhouse-crud
-````
+```
 
 ### 2. Siapkan Virtual Environment
 
 ```bash
 python -m venv env
-env\Scripts\activate      # CMD
-# atau
-env\Scripts\Activate.ps1  # PowerShell
+# Windows
+env\Scripts\activate
+# Linux/Mac
+source env/bin/activate
 ```
 
 ### 3. Install Dependency
@@ -45,34 +78,44 @@ env\Scripts\Activate.ps1  # PowerShell
 pip install -r requirements.txt
 ```
 
-> Jika `requirements.txt` belum ada, install manual:
+### 4. Jalankan ClickHouse (Manual)
 
 ```bash
-pip install fastapi uvicorn clickhouse-connect faker
+docker run -d --name clickhouse-server -p 8123:8123 -p 9000:9000 clickhouse/clickhouse-server
+```
+
+### 5. Jalankan Server FastAPI
+
+```bash
+uvicorn app.main:app --reload
 ```
 
 
-## 🐳 Jalankan ClickHouse (dengan Docker)
+## 🐳 Deploy dengan Docker Compose (Direkomendasikan)
 
 ```bash
-docker run -d --name clickhouse-server -p 8123:8123 -p 9000:9000 yandex/clickhouse-server
+docker compose up --build -d
 ```
 
+Akses:
+- API: http://localhost:8000/docs
+- Grafana: http://localhost:3000
+- ClickHouse: http://localhost:8123
 
-## 🚦 Menjalankan Server
+Login Grafana: `admin / admin`
 
-```bash
-uvicorn main:app --reload
+
+## 🧪 Contoh Request API
+
+### 🔐 `POST /auth/login`
+```json
+{
+  "username": "admin",
+  "password": "password"
+}
 ```
 
-Buka Swagger UI di:
-📄 [http://localhost:8000/docs](http://localhost:8000/docs)
-
-
-## 🧪 Contoh Request
-
-### `POST /articles`
-
+### `POST /articles` (dengan JWT)
 ```json
 {
   "title": "Judul Artikel",
@@ -81,29 +124,39 @@ Buka Swagger UI di:
 ```
 
 ### `GET /articles`
+Mendapatkan semua artikel (support `?skip=0&limit=10&q=keyword`)
 
-Mendapatkan semua artikel.
+### `GET /articles/export`
+Mengunduh artikel dalam bentuk file CSV.
 
 
-## 📁 Struktur Proyek
+## 🧪 Pengujian (Testing)
 
+```bash
+pytest tests/test_articles.py
 ```
-fastapi-clickhouse-crud/
-├── main.py
-├── README.md
-└── env/                # virtual environment (ignore saat commit)
-```
 
 
-## ✨ Rencana Pengembangan (Opsional)
+## 📈 Visualisasi Data
 
-* 🔐 Auth JWT
-* 📦 Export data ke CSV
-* 🗃️ Pagination & Search
-* 📈 Visualisasi data di Grafana
+1. Akses Grafana `http://localhost:3000`
+2. Tambah **ClickHouse** sebagai Data Source (host: `http://clickhouse:8123`)
+3. Buat Dashboard → Panel → Query: 
+   ```sql
+   SELECT count() FROM articles
+   ```
+4. Simpan & sesuaikan visualisasinya.
+
+
+## ✨ Rencana Lanjutan
+
+- 🔐 Manajemen user & roles (admin/user)
+- ⏱ Scheduled job & data analytics
+- 📦 Export ke Excel/JSON
+- 🔒 Rate limiting & throttling
+- ☁️ CI/CD deployment pipeline
 
 
 ## 📄 Lisensi
 
-MIT License © 2025 [Eka0789](https://github.com/eka0789)
-
+MIT License © 2025 [Eka Prasetyo (Aktif Koding)](https://github.com/eka0789)
